@@ -62,7 +62,6 @@ import com.dreammaster.railcraftStones.NH_QuarryPopulator;
 import com.dreammaster.recipes.RecipeRemover;
 import com.dreammaster.scripts.ScriptLoader;
 import com.dreammaster.thaumcraft.TCLoader;
-import com.dreammaster.witchery.WitcheryPlugin;
 import com.github.bartimaeusnek.bartworks.system.material.WerkstoffLoader;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -283,9 +282,9 @@ public class MainRegistry {
             new GregTechPlusPlusAbandonedAspectsFix();
         }
 
-        if (Witchery.isModLoaded()) {
-            new WitcheryPlugin();
-        }
+        /*
+         * if (Witchery.isModLoaded()) { new WitcheryPlugin(); }
+         */
 
         if (CoreModConfig.ModLoginMessage_Enabled) {
             FMLCommonHandler.instance().bus().register(new LoginHandler());
