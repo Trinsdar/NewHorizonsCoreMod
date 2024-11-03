@@ -32,7 +32,7 @@ import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import eu.usrv.yamcore.auxiliary.ItemDescriptor;
 import eu.usrv.yamcore.auxiliary.LogHelper;
 import eu.usrv.yamcore.gameregistry.PotionHelper;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.GTUtility;
 
 /**
  * Eventhandler to apply configured Damage Values to player, if they have certain items in their inventory
@@ -72,9 +72,9 @@ public class HazardousItemsHandler {
             return;
         }
 
-        if (GT_Utility.isWearingFullGasHazmat(event.player)) {
+        if (GTUtility.isWearingFullGasHazmat(event.player)) {
             // Ideally we should check against individual potion effect / damage effect, as this method
-            // checks only for GregTech_API.sGasHazmatList. But actually almost all the hazmat protection armors
+            // checks only for GregTechAPI.sGasHazmatList. But actually almost all the hazmat protection armors
             // can protect against all kinds of sXXXHazmatList.
             return;
         }
@@ -391,6 +391,8 @@ public class HazardousItemsHandler {
         }
     }
 
+    private Field bg2ExtraInvField;
+
     private void CheckInventoryForItems(EntityPlayer pPlayer) {
         if (ticks % inventoryCheckPeriod != 0) {
             return;
@@ -399,31 +401,28 @@ public class HazardousItemsHandler {
         try {
             checkInventoryArray(pPlayer.inventory.mainInventory, pPlayer);
 
-            // M&B addition ------
             if (MineAndBladeBattleGear2.isModLoaded()) {
-                Class<?> c = pPlayer.inventory.getClass();
-                Field extraInv = null;
                 try {
-                    extraInv = c.getDeclaredField("extraItems");
-                } catch (NoSuchFieldException nsfe) {
-                    _mLogger.warn(
-                            "battlegear.changed.1",
-                            "Seems battlegear has updated/changed. Someone has to fix HazardousItems!");
-                }
-
-                if (extraInv == null) return;
-
-                try {
-                    ItemStack[] tExtraInv = (ItemStack[]) extraInv.get(pPlayer.inventory);
+                    if (bg2ExtraInvField == null) {
+                        try {
+                            bg2ExtraInvField = pPlayer.inventory.getClass().getDeclaredField("battlegear2$extraItems");
+                        } catch (NoSuchFieldException nsfe) {
+                            _mLogger.warn(
+                                    "battlegear.changed.1",
+                                    "Seems battlegear has updated/changed. Someone has to fix HazardousItems!");
+                            bg2ExtraInvField = pPlayer.inventory.getClass().getDeclaredField("extraItems");
+                        }
+                        bg2ExtraInvField.setAccessible(true);
+                    }
+                    if (bg2ExtraInvField == null) return;
+                    ItemStack[] tExtraInv = (ItemStack[]) bg2ExtraInvField.get(pPlayer.inventory);
                     checkInventoryArray(tExtraInv, pPlayer);
-                } catch (Exception ex) {
+                } catch (NoSuchFieldException | IllegalAccessException ex) {
                     _mLogger.warn(
                             "battlegear.changed.2",
                             "Seems battlegear has updated/changed. Someone has to fix HazardousItems!");
                 }
             }
-            // ------ M&B addition
-
         } catch (Exception e) {
             _mLogger.error(
                     "HazardousItemsHandler.CheckInventoryForItems.error",

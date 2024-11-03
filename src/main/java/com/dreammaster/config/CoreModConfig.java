@@ -15,12 +15,12 @@ public class CoreModConfig extends ConfigManager {
 
     public boolean OreDictItems_Enabled;
     public static boolean ModLoginMessage_Enabled;
+    public boolean gtnhPauseMenuButtons;
     public static String ModPackVersion = Refstrings.MODPACKPACK_VERSION;
 
     public boolean ModHazardousItems_Enabled;
     public boolean ModDebugVersionDisplay_Enabled;
     public boolean ModCustomToolTips_Enabled;
-    public boolean ModItemInHandInfo_Enabled;
     public boolean ModCustomFuels_Enabled;
     public boolean ModCustomDrops_Enabled;
     public boolean ModAdminErrorLogs_Enabled;
@@ -40,6 +40,7 @@ public class CoreModConfig extends ConfigManager {
     public boolean DebugPrintWerkstoff;
     public String[] MaterialWeights;
     public String[] WerkstoffWeights;
+    public String[] GTPPMaterialWeights;
 
     public OilGeneratorFix.OilConfig OilFixConfig;
 
@@ -56,10 +57,10 @@ public class CoreModConfig extends ConfigManager {
     @Override
     protected void PreInit() {
         ModLoginMessage_Enabled = true;
+        gtnhPauseMenuButtons = true;
         ModDebugVersionDisplay_Enabled = true;
         ModHazardousItems_Enabled = false;
         ModCustomToolTips_Enabled = false;
-        ModItemInHandInfo_Enabled = false;
         ModCustomFuels_Enabled = false;
         ModCustomDrops_Enabled = false;
         ModAdminErrorLogs_Enabled = true;
@@ -81,6 +82,7 @@ public class CoreModConfig extends ConfigManager {
         DebugPrintAddedOres = false;
         MaterialWeights = new String[] {};
         WerkstoffWeights = new String[] {};
+        GTPPMaterialWeights = new String[] {};
 
         pollutionThresholdAirFilter = 10000;
     }
@@ -97,6 +99,11 @@ public class CoreModConfig extends ConfigManager {
                 "Modules",
                 ModLoginMessage_Enabled,
                 "Set to true to show login message with modpack version");
+        gtnhPauseMenuButtons = _mainConfig.getBoolean(
+                "GTNH Pause menu buttons",
+                "Modules",
+                gtnhPauseMenuButtons,
+                "Set to true to display GTNH buttons in the pause menu");
         ModPackVersion = _mainConfig.getString("ModPackVersion", "Modules", ModPackVersion, "Version of the Modpack");
         ModDebugVersionDisplay_Enabled = _mainConfig.getBoolean(
                 "DebugVersionDisplay",
@@ -113,11 +120,6 @@ public class CoreModConfig extends ConfigManager {
                 "Modules",
                 ModCustomToolTips_Enabled,
                 "Set to true to enable CustomToolTips module. This needs a separate config file which is created once you start with this setting enabled");
-        ModItemInHandInfo_Enabled = _mainConfig.getBoolean(
-                "ItemInHandInfo",
-                "Modules",
-                ModItemInHandInfo_Enabled,
-                "Set to true to enable ItemInHandInfo module. If enabled, type /iih to display the item's name-info");
         ModCustomDrops_Enabled = _mainConfig.getBoolean(
                 "CustomDrops",
                 "Modules",
@@ -189,7 +191,12 @@ public class CoreModConfig extends ConfigManager {
                 "WerkstoffWeights",
                 "DeepDarkVoidMiner",
                 WerkstoffWeights,
-                "List of BartWorks material names to adjust weight. Example line: \"Bismutite : 0.3\". Intervening whitespace will be ignored. Use the debug options to get valid names. Use weight <= 0 to disable an ore entirely. Anything not specified in the list will have weight 1. See: com.github.bartimaeusnek.bartworks.system.material.Werkstoff");
+                "List of BartWorks material names to adjust weight. Example line: \"Bismutite : 0.3\". Intervening whitespace will be ignored. Use the debug options to get valid names. Use weight <= 0 to disable an ore entirely. Anything not specified in the list will have weight 1. See: bartworks.system.material.Werkstoff");
+        GTPPMaterialWeights = _mainConfig.getStringList(
+                "GTPPMaterialWeights",
+                "DeepDarkVoidMiner",
+                GTPPMaterialWeights,
+                "List of GT++ material names to adjust weight. Example line: \"Cerite : 0.3\". Intervening whitespace will be ignored. Use the debug options to get valid names. Use weight <= 0 to disable an ore entirely. Anything not specified in the list will have weight 1. See: gtPlusPlus.core.material.ORES");
 
         OilFixConfig = new OilGeneratorFix.OilConfig(_mainConfig);
 

@@ -1,11 +1,10 @@
 package com.dreammaster.gthandler.multiAirFilter;
 
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
-import static gregtech.api.enums.GT_Values.*;
-import static gregtech.api.util.GT_StructureUtility.ofHatchAdder;
-import static gregtech.api.util.GT_StructureUtility.ofHatchAdderOptional;
-import static gregtech.api.util.GT_Utility.filterValidMTEs;
+import static gregtech.api.enums.GTValues.VN;
+import static gregtech.api.util.GTStructureUtility.ofHatchAdder;
+import static gregtech.api.util.GTStructureUtility.ofHatchAdderOptional;
+import static gregtech.api.util.GTUtility.filterValidMTEs;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -31,23 +30,24 @@ import eu.usrv.yamcore.auxiliary.PlayerChatHelper;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.items.GT_MetaGenerated_Tool;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_EnhancedMultiBlockBase;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
-import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
-import gregtech.api.util.GT_Recipe;
-import gregtech.api.util.GT_Utility;
-import gregtech.common.items.GT_MetaGenerated_Tool_01;
+import gregtech.api.items.MetaGeneratedTool;
+import gregtech.api.metatileentity.implementations.MTEEnhancedMultiBlockBase;
+import gregtech.api.metatileentity.implementations.MTEHatchMuffler;
+import gregtech.api.objects.GTRenderedTexture;
+import gregtech.api.util.GTRecipe;
+import gregtech.api.util.GTUtility;
+import gregtech.api.util.MultiblockTooltipBuilder;
+import gregtech.common.items.MetaGeneratedTool01;
+import gregtech.common.pollution.Pollution;
 
+// TODO move this multi to GT5u
 public abstract class GT_MetaTileEntity_AirFilterBase
-        extends GT_MetaTileEntity_EnhancedMultiBlockBase<GT_MetaTileEntity_AirFilterBase> {
+        extends MTEEnhancedMultiBlockBase<GT_MetaTileEntity_AirFilterBase> {
 
     protected int baseEff = 0;
     protected int multiTier = 0;
     protected int chunkIndex = 0;
     protected boolean hasPollution = false;
-    protected ChunkCoordinates[] chunkList; // list of the chunks in the working area
     protected int mode = 0; // 0 for processing chunks in order, 1 for processing chunks randomly
     protected int size; // current working size of the multi, max is 2*multiTier + 1
     protected boolean isFilterLoaded = false;
@@ -116,7 +116,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
                 && mMaintenanceHatches.size() == 1;
     }
 
-    static final GT_Recipe tRecipeT1 = new GT_Recipe(
+    static final GTRecipe tRecipeT1 = new GTRecipe(
             new ItemStack[] { CustomItemList.AdsorptionFilter.get(1L, new Object()) },
             new ItemStack[] { CustomItemList.AdsorptionFilterDirty.get(1L, new Object()) },
             null,
@@ -126,7 +126,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
             200,
             30,
             0);
-    static final GT_Recipe tRecipeT2 = new GT_Recipe(
+    static final GTRecipe tRecipeT2 = new GTRecipe(
             new ItemStack[] { CustomItemList.AdsorptionFilter.get(1L, new Object()) },
             new ItemStack[] { CustomItemList.AdsorptionFilterDirty.get(1L, new Object()) },
             null,
@@ -136,7 +136,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
             200,
             480,
             0);
-    static final GT_Recipe tRecipeT3 = new GT_Recipe(
+    static final GTRecipe tRecipeT3 = new GTRecipe(
             new ItemStack[] { CustomItemList.AdsorptionFilter.get(1L, new Object()) },
             new ItemStack[] { CustomItemList.AdsorptionFilterDirty.get(1L, new Object()) },
             null,
@@ -155,70 +155,49 @@ public abstract class GT_MetaTileEntity_AirFilterBase
         super(aName);
     }
 
-    protected void populateChunkList() {
-        chunkList = new ChunkCoordinates[size * size];
-        World world = this.getBaseMetaTileEntity().getWorld();
-        int xCoordMulti = this.getBaseMetaTileEntity().getXCoord();
-        int zCoordMulti = this.getBaseMetaTileEntity().getZCoord();
-
-        for (int i = 0; i < size * size; i++) {
-            int xCoordChunk = (xCoordMulti - 16 * (size / 2 - (i % (size)))) >> 4;
-            int zCoordChunk = (zCoordMulti + 16 * (size / 2 - (i / (size)))) >> 4;
-            chunkList[i] = new ChunkCoordinates(xCoordChunk, zCoordChunk, world);
-        }
-    }
-
-    public abstract GT_Recipe getRecipe();
+    public abstract GTRecipe getRecipe();
 
     public String getCasingString() {
-        switch (getCasingMeta()) {
-            case 0:
-                return "Air Filter Turbine Casing";
-            case 3:
-                return "Advanced Air Filter Turbine Casing";
-            case 5:
-                return "Super Air Filter Turbine Casing";
-            default:
-                return "fill a ticket on github if you read this";
-        }
+        return switch (getCasingMeta()) {
+            case 0 -> "Air Filter Turbine Casing";
+            case 3 -> "Advanced Air Filter Turbine Casing";
+            case 5 -> "Super Air Filter Turbine Casing";
+            default -> "fill a ticket on github if you read this";
+        };
     }
 
     public String getPipeString() {
-        switch (getPipeMeta()) {
-            case 1:
-                return "Air Filter Vent Casing";
-            case 4:
-                return "Advanced Air Filter Vent Casing";
-            case 6:
-                return "Super Air Filter Vent Casing";
-            default:
-                return "fill a ticket on github if you read this";
-        }
+        return switch (getPipeMeta()) {
+            case 1 -> "Air Filter Vent Casing";
+            case 4 -> "Advanced Air Filter Vent Casing";
+            case 6 -> "Super Air Filter Vent Casing";
+            default -> "fill a ticket on github if you read this";
+        };
     }
 
     @Override
-    protected GT_Multiblock_Tooltip_Builder createTooltip() {
-        final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Air Filter").addInfo("Controller block for the Electric Air Filter T" + multiTier)
-                .addInfo("Needs a Turbine in the controller")
-                .addInfo(
-                        "Add " + ItemList.AdsorptionFilter.getIS().getDisplayName()
-                                + " in input bus to double efficiency (30 uses per item)")
-                .addInfo("Machine tier = Maximum effective Muffler tier")
+    protected MultiblockTooltipBuilder createTooltip() {
+        final MultiblockTooltipBuilder tt = new MultiblockTooltipBuilder();
+        tt.addMachineType("Air Filter").addInfo("Needs a Turbine in the controller")
                 .addInfo("Can process " + (2 * multiTier + 1) + "x" + (2 * multiTier + 1) + " chunks")
+                .addInfo("Each muffler hatch reduces pollution in one chunk of the working area by:")
                 .addInfo(
-                        "Each muffler reduce pollution by " + MainRegistry.CoreConfig.globalMultiplicator
-                                + " * bonusMultiTier * turbineEff * multiEff * Floor("
+                        "  " + EnumChatFormatting.WHITE
+                                + MainRegistry.CoreConfig.globalMultiplicator
+                                + " * multiTierBonus * turbineEff * FLOOR("
                                 + MainRegistry.CoreConfig.scalingFactor
-                                + "^effectiveTier) every second")
-                .addInfo("The value of bonusMultiTier for this controller is: " + getBonusByTier()).addSeparator()
-                .beginStructureBlock(3, 4, 3, true).addController("Front bottom")
-                .addOtherStructurePart(getCasingString(), "Top and bottom")
-                .addOtherStructurePart(getPipeString(), "Corners of the middle 2 layers")
-                .addOtherStructurePart("Muffler Hatch Or " + getPipeString(), "8 in the middle layers")
+                                + "^mufflerTier)")
+                .addInfo("every second").addInfo("- multiTierBonus for this controller is " + getBonusByTier())
+                .addInfo("- turbineEff is the efficiency of the Turbine in controller slot")
+                .addInfo("- Effective muffler tier is limited by energy input tier").addSeparator()
+                .addInfo("Insert " + ItemList.AdsorptionFilter.getIS().getDisplayName() + " in an input bus")
+                .addInfo("  to double pollution cleaning amount (30 uses per item)")
+                .addInfo("Each maintenance issue reduces cleaning amount by 10%").beginStructureBlock(3, 4, 3, true)
+                .addController("Front bottom").addOtherStructurePart(getCasingString(), "Top and bottom layers")
+                .addOtherStructurePart(getPipeString(), "Corners of the middle two layers")
+                .addOtherStructurePart("Muffler Hatch", "Sides of the middle two layers")
                 .addEnergyHatch("Any bottom layer casing", 1).addMaintenanceHatch("Any bottom layer casing", 1)
-                .addInputBus("Any bottom layer casing", 1).addOutputBus("Any bottom layer casing", 1)
-                .addMufflerHatch("Middle Center", 2).toolTipFinisher("GTNH Coremod");
+                .addInputBus("Any bottom layer casing", 1).addOutputBus("Any bottom layer casing", 1).toolTipFinisher();
         return tt;
     }
 
@@ -227,7 +206,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
             int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(getCasingIndex()),
-                    new GT_RenderedTexture(
+                    new GTRenderedTexture(
                             aActive ? Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE_ACTIVE
                                     : Textures.BlockIcons.OVERLAY_FRONT_DIESEL_ENGINE) };
         }
@@ -240,9 +219,9 @@ public abstract class GT_MetaTileEntity_AirFilterBase
 
     @Override
     public boolean isCorrectMachinePart(ItemStack aStack) {
-        return aStack != null && aStack.getItem() instanceof GT_MetaGenerated_Tool_01
-                && ((GT_MetaGenerated_Tool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier() > 0
-                && GT_MetaGenerated_Tool.getPrimaryMaterial(aStack).mToolSpeed > 0
+        return aStack != null && aStack.getItem() instanceof MetaGeneratedTool01
+                && ((MetaGeneratedTool) aStack.getItem()).getToolStats(aStack).getSpeedMultiplier() > 0
+                && MetaGeneratedTool.getPrimaryMaterial(aStack).mToolSpeed > 0
                 && aStack.getItemDamage() > 169
                 && aStack.getItemDamage() < 180;
     }
@@ -259,9 +238,9 @@ public abstract class GT_MetaTileEntity_AirFilterBase
 
     public int getPollutionCleaningRatePerSecond(float turbineEff, float multiEff, boolean isRateBoosted) {
         long tVoltage = getMaxInputVoltage();
-        byte tTier = (byte) max(1, GT_Utility.getTier(tVoltage));
+        byte tTier = (byte) max(1, GTUtility.getTier(tVoltage));
         int pollutionPerSecond = 0;
-        for (GT_MetaTileEntity_Hatch_Muffler tHatch : filterValidMTEs(mMufflerHatches)) {
+        for (MTEHatchMuffler tHatch : filterValidMTEs(mMufflerHatches)) {
             // applying scaling factor
             pollutionPerSecond += (int) Math.pow(MainRegistry.CoreConfig.scalingFactor, min(tTier, tHatch.mTier));
         }
@@ -292,8 +271,8 @@ public abstract class GT_MetaTileEntity_AirFilterBase
         try {
             // make the turbine to be required
             if (isCorrectMachinePart(aStack)) {
-                baseEff = GT_Utility.safeInt(
-                        (long) ((50.0F + 10.0F * ((GT_MetaGenerated_Tool) aStack.getItem()).getToolCombatDamage(aStack))
+                baseEff = GTUtility.safeInt(
+                        (long) ((50.0F + 10.0F * ((MetaGeneratedTool) aStack.getItem()).getToolCombatDamage(aStack))
                                 * 100));
             } else {
                 return false;
@@ -309,7 +288,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
             int tInputList_sS = tInputList.size();
             for (int i = 0; i < tInputList_sS - 1; i++) {
                 for (int j = i + 1; j < tInputList_sS; j++) {
-                    if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
+                    if (GTUtility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
                         if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
                             tInputList.remove(j--);
                             tInputList_sS = tInputList.size();
@@ -371,38 +350,46 @@ public abstract class GT_MetaTileEntity_AirFilterBase
     }
 
     public void cleanPollution() {
-        int pollutionCleaningRatePerSecond = getPollutionCleaningRatePerSecond(
-                baseEff / 10000f,
-                mEfficiency / 10000f,
-                isFilterLoaded);
-        if (pollutionCleaningRatePerSecond > 0) {
+        int cleaningRate = getPollutionCleaningRatePerSecond(baseEff / 10000f, mEfficiency / 10000f, isFilterLoaded);
+        if (cleaningRate > 0) {
+            World world = this.getBaseMetaTileEntity().getWorld();
             if (mode == 0) { // processing chunk normally
-                chunkList[chunkIndex].removePollution(pollutionCleaningRatePerSecond);
+                removePollutionFromChunk(cleaningRate, world, chunkIndex);
                 chunkIndex += 1;
-                if (chunkIndex == chunkList.length) {
+                if (chunkIndex >= size * size) {
                     chunkIndex = 0;
                 }
             } else { // process chunks randomly
-
                 // list all the polluted chunks
-                ArrayList<ChunkCoordinates> pollutedChunkList = new ArrayList<>();
-                for (ChunkCoordinates chunk : chunkList) {
-                    if (chunk.getPollution() > 0) {
-                        pollutedChunkList.add(chunk);
+                ArrayList<Integer> pollutedChunks = new ArrayList<>();
+                for (int index = 0; index < size * size; index++) {
+                    if (getPollutionInChunk(world, index) > 0) {
+                        pollutedChunks.add(index);
                     }
                 }
-
                 // pick the chunk randomly
-                ChunkCoordinates pollutedChunk;
-                if (pollutedChunkList.size() > 1) {
-                    pollutedChunk = pollutedChunkList.get(MainRegistry.Rnd.nextInt(pollutedChunkList.size() - 1));
-                    pollutedChunk.removePollution(pollutionCleaningRatePerSecond);
-                } else if (pollutedChunkList.size() == 1) { // no random on only one element
-                    pollutedChunk = pollutedChunkList.get(0);
-                    pollutedChunk.removePollution(pollutionCleaningRatePerSecond);
+                if (!pollutedChunks.isEmpty()) {
+                    int index = pollutedChunks.get(MainRegistry.Rnd.nextInt(pollutedChunks.size()));
+                    removePollutionFromChunk(cleaningRate, world, index);
                 }
             }
         }
+    }
+
+    protected final int getPollutionInChunk(World world, int chunkIndexIn) {
+        final int xCoordMulti = this.getBaseMetaTileEntity().getXCoord();
+        final int zCoordMulti = this.getBaseMetaTileEntity().getZCoord();
+        final int chunkX = xCoordMulti - 16 * (size / 2 - chunkIndexIn % size) >> 4;
+        final int chunkZ = zCoordMulti + 16 * (size / 2 - chunkIndexIn / size) >> 4;
+        return Pollution.getPollution(world, chunkX, chunkZ);
+    }
+
+    protected final void removePollutionFromChunk(int amount, World world, int chunkIndexIn) {
+        final int xCoordMulti = this.getBaseMetaTileEntity().getXCoord();
+        final int zCoordMulti = this.getBaseMetaTileEntity().getZCoord();
+        final int chunkX = xCoordMulti - 16 * (size / 2 - chunkIndexIn % size) >> 4;
+        final int chunkZ = zCoordMulti + 16 * (size / 2 - chunkIndexIn / size) >> 4;
+        Pollution.addPollution(world, chunkX, chunkZ, -amount);
     }
 
     public abstract int getPipeMeta();
@@ -416,19 +403,18 @@ public abstract class GT_MetaTileEntity_AirFilterBase
 
     @Override
     public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        if (chunkList == null) {
-            if (size == 0) { // here in case it's not set by NBT loading
-                size = 2 * multiTier + 1;
-            }
-            populateChunkList();
+        if (size == 0) { // here in case it's not set by NBT loading
+            size = 2 * multiTier + 1;
         }
         super.onPreTick(aBaseMetaTileEntity, aTick);
     }
 
     public int getTotalPollution() {
         int pollutionAmount = 0;
-        for (ChunkCoordinates chunk : chunkList) {
-            pollutionAmount += chunk.getPollution();
+        World world = this.getBaseMetaTileEntity().getWorld();
+        for (int i = 0; i < size * size; i++) {
+            pollutionAmount += getPollutionInChunk(world, i);
+
         }
         return pollutionAmount;
     }
@@ -493,7 +479,6 @@ public abstract class GT_MetaTileEntity_AirFilterBase
                 size -= 2; // always get odd number
             }
             chunkIndex = 0;
-            populateChunkList();
             PlayerChatHelper
                     .SendInfo(aPlayer, "Electric air filter is now working in a " + size + "x" + size + " area");
         }
@@ -525,7 +510,7 @@ public abstract class GT_MetaTileEntity_AirFilterBase
                         + EnumChatFormatting.RESET
                         + " EU/t(*2A) Tier: "
                         + EnumChatFormatting.YELLOW
-                        + VN[GT_Utility.getTier(getMaxInputVoltage())]
+                        + VN[GTUtility.getTier(getMaxInputVoltage())]
                         + EnumChatFormatting.RESET,
                 "Problems: " + EnumChatFormatting.RED
                         + (getIdealStatus() - getRepairStatus())

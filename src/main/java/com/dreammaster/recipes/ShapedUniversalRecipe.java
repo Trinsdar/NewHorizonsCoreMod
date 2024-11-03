@@ -1,6 +1,5 @@
 package com.dreammaster.recipes;
 
-import static com.dreammaster.scripts.IScriptLoader.missing;
 import static com.dreammaster.scripts.IScriptLoader.wildcard;
 
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -18,8 +18,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import gregtech.api.interfaces.IItemContainer;
 import gregtech.api.objects.ItemData;
-import gregtech.api.util.GT_OreDictUnificator;
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.GTOreDictUnificator;
+import gregtech.api.util.GTUtility;
 
 /**
  * ShapedOreRecipe implementation with NBT checking support. Use {@link CustomItem} in input objects to check for NBT
@@ -28,13 +28,14 @@ import gregtech.api.util.GT_Utility;
  */
 public class ShapedUniversalRecipe extends ShapedOreRecipe {
 
-    ItemStack output;
-    Object[][] recipe = new Object[3][3];
-    Object[] recipeXY = new Object[9];
-    int maxX, maxY = 0;
+    static final ItemStack MISSING = new ItemStack(Blocks.fire);
+    private final ItemStack output;
+    private final Object[][] recipe = new Object[3][3];
+    private final Object[] recipeXY = new Object[9];
+    private int maxX, maxY = 0;
 
     public ShapedUniversalRecipe(ItemStack result, Object... recipe) {
-        super(result, "xxx", "xxx", "xxx", 'x', missing);
+        super(result, "xxx", "xxx", "xxx", 'x', MISSING);
         output = result.copy();
         if (recipe.length > 3 && recipe[0] instanceof String
                 && recipe[1] instanceof String
@@ -82,11 +83,11 @@ public class ShapedUniversalRecipe extends ShapedOreRecipe {
                 if (this.recipe[y][x] instanceof String) {
                     ArrayList<ItemStack> ores = OreDictionary.getOres((String) this.recipe[y][x]);
                     this.recipeXY[y * 3 + x] = ores;
-                    HashSet<GT_Utility.ItemId> oresHashes = new HashSet<>();
+                    HashSet<GTUtility.ItemId> oresHashes = new HashSet<>();
                     for (ItemStack o : ores) {
                         ItemStack i = o.copy();
                         i.stackTagCompound = null;
-                        oresHashes.add(GT_Utility.ItemId.createNoCopy(i));
+                        oresHashes.add(GTUtility.ItemId.createNoCopy(i));
                     }
                     this.recipe[y][x] = oresHashes;
                 } else if (this.recipe[y][x] instanceof ItemStack) {
@@ -103,7 +104,7 @@ public class ShapedUniversalRecipe extends ShapedOreRecipe {
                     this.recipeXY[y * 3 + x] = this.recipe[y][x];
                 } else if (this.recipe[y][x] instanceof ItemData) {
                     ItemData data = (ItemData) this.recipe[y][x];
-                    ItemStack itemStack = GT_OreDictUnificator.get(data.mPrefix, data.mMaterial.mMaterial, 1);
+                    ItemStack itemStack = GTOreDictUnificator.get(data.mPrefix, data.mMaterial.mMaterial, 1);
                     if (itemStack == null) {
                         throw new NullPointerException("bad item passed in the recipe");
                     } else {
@@ -137,15 +138,15 @@ public class ShapedUniversalRecipe extends ShapedOreRecipe {
                 if (r == null ^ stack == null) return false;
                 if (stack == null) continue;
                 if (r instanceof ItemStack) {
-                    if (!GT_Utility.areStacksEqual((ItemStack) r, stack, true)) return false;
+                    if (!GTUtility.areStacksEqual((ItemStack) r, stack, true)) return false;
                 } else if (r instanceof HashSet) {
                     ItemStack copy = stack.copy();
                     copy.stackTagCompound = null;
                     // noinspection unchecked
-                    if (!((HashSet<GT_Utility.ItemId>) r).contains(GT_Utility.ItemId.createNoCopy(copy))) {
+                    if (!((HashSet<GTUtility.ItemId>) r).contains(GTUtility.ItemId.createNoCopy(copy))) {
                         Items.feather.setDamage(copy, wildcard);
                         // noinspection unchecked
-                        if (!((HashSet<GT_Utility.ItemId>) r).contains(GT_Utility.ItemId.createNoCopy(copy)))
+                        if (!((HashSet<GTUtility.ItemId>) r).contains(GTUtility.ItemId.createNoCopy(copy)))
                             return false;
                     }
                 } else if (r instanceof CustomItem) {

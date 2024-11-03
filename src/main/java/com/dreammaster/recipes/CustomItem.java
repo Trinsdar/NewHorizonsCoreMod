@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import gregtech.api.util.GT_Utility;
+import gregtech.api.util.GTUtility;
 
 /**
  * Custom item matcher interface. For use in {@link ShapedUniversalRecipe} / {@link ShapelessUniversalRecipe}
@@ -56,6 +56,8 @@ public interface CustomItem {
         private NBTTagCompound nbt;
         private boolean exact = false;
 
+        private boolean noValues = false;
+
         public NBTItem() {}
 
         public NBTItem(ItemStack stack) {
@@ -64,7 +66,7 @@ public interface CustomItem {
 
         @Override
         public boolean matches(ItemStack stack) {
-            if (!GT_Utility.areStacksEqual(this.stack, stack, true)) return false;
+            if (!GTUtility.areStacksEqual(this.stack, stack, true)) return false;
             if (nbt == null && stack.stackTagCompound != null) return !exact;
             if (nbt == null) return true;
             if (exact) return nbt.equals(stack.stackTagCompound);
@@ -74,7 +76,7 @@ public interface CustomItem {
             for (String key : (Set<String>) nbt.func_150296_c()) {
                 NBTBase v = nbt.getTag(key);
                 if (!stack.stackTagCompound.hasKey(key, v.getId())) return false;
-                if (!stack.stackTagCompound.getTag(key).equals(v)) return false;
+                if ((!noValues) && (!stack.stackTagCompound.getTag(key).equals(v))) return false;
             }
             return true;
         }
@@ -120,6 +122,11 @@ public interface CustomItem {
 
         public NBTItem matchExact() {
             exact = true;
+            return this;
+        }
+
+        public NBTItem noValues() {
+            noValues = true;
             return this;
         }
 
