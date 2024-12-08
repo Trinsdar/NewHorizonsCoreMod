@@ -485,12 +485,14 @@ public class AssemblerRecipes implements Runnable {
                 .itemOutputs(CustomItemList.SnowQueenBlood.get(1L)).duration(1 * MINUTES + 30 * SECONDS)
                 .eut(TierEU.RECIPE_IV).addTo(assemblerRecipes);
 
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        GTModHandler.getModItem(Thaumcraft.ID, "ItemResource", 16L, 14),
-                        GTModHandler.getModItem(Witchery.ID, "ingredient", 1L, 130))
-                .itemOutputs(GTOreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1)).duration(45 * SECONDS)
-                .eut(256).addTo(assemblerRecipes);
+        if (Witchery.isModLoaded()) {
+            GTValues.RA.stdBuilder()
+                    .itemInputs(
+                            GTModHandler.getModItem(Thaumcraft.ID, "ItemResource", 16L, 14),
+                            GTModHandler.getModItem(Witchery.ID, "ingredient", 1L, 130))
+                    .itemOutputs(GTOreDictUnificator.get(OrePrefixes.gem, Materials.NetherStar, 1)).duration(45 * SECONDS)
+                    .eut(256).addTo(assemblerRecipes);
+        }
 
         GTValues.RA.stdBuilder()
                 .itemInputs(
