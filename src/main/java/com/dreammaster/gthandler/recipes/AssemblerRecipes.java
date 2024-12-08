@@ -2285,11 +2285,12 @@ public class AssemblerRecipes implements Runnable {
         // Neutronium Stabilization Casing
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        ItemList.Field_Generator_ZPM.get(4),
-                        GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.NaquadahAlloy, 4),
                         ItemList.Casing_MAX.get(1),
+                        ItemList.Field_Generator_ZPM.get(1),
+                        GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.NaquadahAlloy, 4),
+                        GTOreDictUnificator.get(OrePrefixes.screw, Materials.NaquadahAlloy, 24),
                         GTUtility.getIntegratedCircuit(16))
-                .itemOutputs(ItemList.Neutronium_Stable_Casing.get(4)).duration(2 * SECONDS + 10 * TICKS).eut(16)
+                .itemOutputs(ItemList.Neutronium_Stable_Casing.get(4)).duration(10 * SECONDS).eut(TierEU.RECIPE_UV)
                 .addTo(assemblerRecipes);
 
         // Neutronium Compressor conversion
@@ -2361,11 +2362,14 @@ public class AssemblerRecipes implements Runnable {
                 .itemInputs(
                         ItemList.Casing_Pipe_Bronze.get(1),
                         ItemList.Electric_Pump_LuV.get(2),
-                        ItemList.Duct_Tape.get(4),
-                        TRINIUM_NAQUADAH_CARBON.getComponentByPrefix(OrePrefixes.pipeMedium, 16),
-                        HASTELLOY_X.getComponentByPrefix(OrePrefixes.pipeMedium, 16),
-                        GTOreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Ultimate, 32))
-                .fluidInputs(FluidRegistry.getFluidStack("pyrotheum", 2000))
+                        GTOreDictUnificator.get(OrePrefixes.plateDense, Materials.Invar, 8),
+                        CustomItemList.MicaInsulatorFoil.get(64),
+                        CustomItemList.MicaInsulatorFoil.get(64),
+                        CustomItemList.MicaInsulatorFoil.get(64),
+                        TRINIUM_NAQUADAH_CARBON.getComponentByPrefix(OrePrefixes.pipeMedium, 2),
+                        HASTELLOY_X.getComponentByPrefix(OrePrefixes.pipeMedium, 2),
+                        GTOreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Ultimate, 2))
+                .fluidInputs(FluidRegistry.getFluidStack("pyrotheum", 16000))
                 .itemOutputs(ItemList.Heating_Duct_Casing.get(1)).duration(5 * SECONDS).eut(TierEU.RECIPE_LuV)
                 .addTo(assemblerRecipes);
 
@@ -2374,11 +2378,14 @@ public class AssemblerRecipes implements Runnable {
                 .itemInputs(
                         ItemList.Casing_Pipe_TungstenSteel.get(1),
                         ItemList.Electric_Pump_LuV.get(2),
-                        ItemList.Duct_Tape.get(4),
-                        TRINIUM_NAQUADAH_CARBON.getComponentByPrefix(OrePrefixes.pipeMedium, 16),
-                        HASTELLOY_X.getComponentByPrefix(OrePrefixes.pipeMedium, 16),
-                        GTOreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Ultimate, 32))
-                .fluidInputs(FluidRegistry.getFluidStack("cryotheum", 2000))
+                        GTOreDictUnificator.get(OrePrefixes.plateDense, Materials.Aluminium, 8),
+                        ItemList.Reactor_Coolant_Sp_3.get(1),
+                        ItemList.Reactor_Coolant_Sp_3.get(1),
+                        ItemList.Reactor_Coolant_Sp_3.get(1),
+                        TRINIUM_NAQUADAH_CARBON.getComponentByPrefix(OrePrefixes.pipeMedium, 2),
+                        HASTELLOY_X.getComponentByPrefix(OrePrefixes.pipeMedium, 2),
+                        GTOreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Ultimate, 2))
+                .fluidInputs(FluidRegistry.getFluidStack("cryotheum", 16000))
                 .itemOutputs(ItemList.Coolant_Duct_Casing.get(1)).duration(5 * SECONDS).eut(TierEU.RECIPE_LuV)
                 .addTo(assemblerRecipes);
 
@@ -2582,7 +2589,7 @@ public class AssemblerRecipes implements Runnable {
                         GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.Steel, 1),
                         GTOreDictUnificator.get(OrePrefixes.stick, Materials.Steel, 4),
                         GTOreDictUnificator.get(OrePrefixes.plate, Materials.Steel, 4),
-                        GTUtility.getIntegratedCircuit(3))
+                        GTUtility.getIntegratedCircuit(13))
                 .itemOutputs(ItemList.Casing_Firebox_Steel.get(1)).duration(5 * SECONDS).eut(TierEU.RECIPE_LV)
                 .addTo(assemblerRecipes);
 
@@ -2591,7 +2598,7 @@ public class AssemblerRecipes implements Runnable {
                         GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.Titanium, 1),
                         GTOreDictUnificator.get(OrePrefixes.stick, Materials.Titanium, 4),
                         GTOreDictUnificator.get(OrePrefixes.plate, Materials.Titanium, 4),
-                        GTUtility.getIntegratedCircuit(3))
+                        GTUtility.getIntegratedCircuit(13))
                 .itemOutputs(ItemList.Casing_Firebox_Titanium.get(1)).duration(5 * SECONDS).eut(TierEU.RECIPE_LV)
                 .addTo(assemblerRecipes);
 
@@ -2600,7 +2607,7 @@ public class AssemblerRecipes implements Runnable {
                         GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.TungstenSteel, 1),
                         GTOreDictUnificator.get(OrePrefixes.stick, Materials.TungstenSteel, 4),
                         GTOreDictUnificator.get(OrePrefixes.plate, Materials.TungstenSteel, 4),
-                        GTUtility.getIntegratedCircuit(3))
+                        GTUtility.getIntegratedCircuit(13))
                 .itemOutputs(ItemList.Casing_Firebox_TungstenSteel.get(1)).duration(5 * SECONDS).eut(TierEU.RECIPE_LV)
                 .addTo(assemblerRecipes);
 
@@ -9339,6 +9346,18 @@ public class AssemblerRecipes implements Runnable {
                         .itemOutputs(new ItemStack(ModBlocks.blocks.get("Ho"), 1, 0)).duration(15 * SECONDS)
                         .eut(TierEU.RECIPE_UIV).addTo(assemblerRecipes);
             }
+            // Mehen Belt
+            GTValues.RA.stdBuilder()
+                    .itemInputs(
+                            getModItem(Botania.ID, "tinyPlanetBlock", 1, 0),
+                            GTOreDictUnificator.get(OrePrefixes.stone, Materials.GraniteBlack, 64L),
+                            getModItem(GalacticraftMars.ID, "tile.denseIce", 64, 0),
+                            GTModHandler.getModItem(GalacticraftAmunRa.ID, "tile.baseBlockRock", 1L, 14),
+                            GTUtility.getIntegratedCircuit(17))
+                    .fluidInputs(FluidRegistry.getFluidStack("ice", 10000))
+                    .itemOutputs(new ItemStack(ModBlocks.blocks.get("MB"), 1, 0)).duration(15 * SECONDS)
+                    .eut(TierEU.RECIPE_UIV).addTo(assemblerRecipes);
+
             // Technically T10
             // Deep Dark
             for (OrePrefixes orePrefix : allOrePrefixes) {

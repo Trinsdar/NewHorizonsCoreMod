@@ -746,14 +746,6 @@ public class GT_CraftingRecipeLoader extends gregtech.loaders.postload.CraftingR
                         GGMaterial.incoloy903.get(OrePrefixes.pipeSmall), 'F',
                         OrePrefixes.gearGt.get(Materials.Titanium) });
 
-        // Neutronium Stabilization Casing
-        GTModHandler.addCraftingRecipe(
-                ItemList.Neutronium_Stable_Casing.get(4),
-                bits,
-                new Object[] { "PQP", "QFQ", "PQP", 'P',
-                        GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.NaquadahAlloy, 1), 'Q',
-                        ItemList.Field_Generator_ZPM.get(1), 'F', ItemList.Casing_MAX.get(1) });
-
         // Industrial Precision Lathe
         GTModHandler.addCraftingRecipe(
                 ItemList.Machine_Multi_Lathe.get(1),
@@ -1710,14 +1702,30 @@ public class GT_CraftingRecipeLoader extends gregtech.loaders.postload.CraftingR
         }
 
         if (ZTones.isModLoaded()) {
+            // for recycling
             GTModHandler.addCraftingRecipe(
                     GTModHandler.getModItem(ZTones.ID, "stoneTile", 8L, 0),
-                    bits,
+                    GTModHandler.RecipeBits.REVERSIBLE,
+                    new Object[] { " S ", "STS", " S ", 'S', new ItemStack(Blocks.stone_slab, 1), 'T',
+                            new ItemStack(Blocks.stone, 1) });
+            GTModHandler.removeRecipeByOutput(GTModHandler.getModItem(ZTones.ID, "stoneTile", 8L, 0));
+            // actual
+            GTModHandler.addCraftingRecipe(
+                    GTModHandler.getModItem(ZTones.ID, "stoneTile", 8L, 0),
+                    bits4,
                     new Object[] { "SSS", "STS", "SSS", 'S', new ItemStack(Blocks.stone_slab, 1), 'T',
                             new ItemStack(Blocks.stone, 1) });
+            // for recycling
             GTModHandler.addCraftingRecipe(
                     GTModHandler.getModItem(ZTones.ID, "auroraBlock", 8L, 0),
-                    bits,
+                    GTModHandler.RecipeBits.REVERSIBLE,
+                    new Object[] { " G ", "GDG", " G ", 'G', new ItemStack(Blocks.glass, 1), 'D',
+                            new ItemStack(Items.dye, 1, GTValues.W) });
+            GTModHandler.removeRecipeByOutput(GTModHandler.getModItem(ZTones.ID, "auroraBlock", 8L, 0));
+            // actual
+            GTModHandler.addCraftingRecipe(
+                    GTModHandler.getModItem(ZTones.ID, "auroraBlock", 8L, 0),
+                    bits4,
                     new Object[] { "GGG", "GDG", "GGG", 'G', new ItemStack(Blocks.glass, 1), 'D',
                             new ItemStack(Items.dye, 1, GTValues.W) });
             GTModHandler.addCraftingRecipe(
