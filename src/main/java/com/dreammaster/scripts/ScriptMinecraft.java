@@ -3,7 +3,6 @@ package com.dreammaster.scripts;
 import static com.dreammaster.main.MainRegistry.Module_CustomFuels;
 import static gregtech.api.enums.Mods.Backpack;
 import static gregtech.api.enums.Mods.BiomesOPlenty;
-import static gregtech.api.enums.Mods.BloodArsenal;
 import static gregtech.api.enums.Mods.CarpentersBlocks;
 import static gregtech.api.enums.Mods.ExtraTrees;
 import static gregtech.api.enums.Mods.ExtraUtilities;
@@ -26,7 +25,6 @@ import static gregtech.api.enums.Mods.Thaumcraft;
 import static gregtech.api.enums.Mods.ThaumicBases;
 import static gregtech.api.enums.Mods.TinkerConstruct;
 import static gregtech.api.enums.Mods.TwilightForest;
-import static gregtech.api.enums.Mods.Witchery;
 import static gregtech.api.recipe.RecipeMaps.alloySmelterRecipes;
 import static gregtech.api.recipe.RecipeMaps.assemblerRecipes;
 import static gregtech.api.recipe.RecipeMaps.cutterRecipes;
@@ -88,13 +86,15 @@ public class ScriptMinecraft implements IScriptLoader {
                 TaintedMagic.ID,
                 Thaumcraft.ID,
                 ThaumicBases.ID,
-                TwilightForest.ID,
-                Witchery.ID);
+                TwilightForest.ID);
     }
 
     @Override
     public void loadRecipes() {
         craftingRecipes();
+        if (Witchery.isModLoaded()){
+            witcheryRecipes();
+        }
 
         GTModHandler.addSmeltingRecipe(
                 CustomItemList.UnfiredClayBrick.get(1L),
@@ -621,12 +621,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(Witchery.ID, "witchlog", 1, wildcard, missing),
-                        getModItem(Minecraft.ID, "flint", 2, 0, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "crafting_table", 1, 0, missing)).duration(10 * SECONDS).eut(4)
-                .addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         new ItemStack(BOPBlockRegistrator.log_Rainforest, 1, wildcard),
                         getModItem(Minecraft.ID, "flint", 2, 0, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "crafting_table", 1, 0, missing)).duration(10 * SECONDS).eut(4)
@@ -747,12 +741,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(Minecraft.ID, "log", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         getModItem(Minecraft.ID, "log2", 2, wildcard, missing),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -809,12 +797,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .itemInputs(
                         getModItem(Minecraft.ID, "log2", 2, wildcard, missing),
                         getModItem(PamsHarvestTheNether.ID, "netherPlanks", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(Minecraft.ID, "log2", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
@@ -879,12 +861,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(BiomesOPlenty.ID, "logs1", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         getModItem(BiomesOPlenty.ID, "logs2", 2, wildcard, missing),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -941,12 +917,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .itemInputs(
                         getModItem(BiomesOPlenty.ID, "logs2", 2, wildcard, missing),
                         getModItem(PamsHarvestTheNether.ID, "netherPlanks", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(BiomesOPlenty.ID, "logs2", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
@@ -1011,12 +981,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(BiomesOPlenty.ID, "logs3", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         getModItem(BiomesOPlenty.ID, "logs4", 2, wildcard, missing),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -1073,12 +1037,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .itemInputs(
                         getModItem(BiomesOPlenty.ID, "logs4", 2, wildcard, missing),
                         getModItem(PamsHarvestTheNether.ID, "netherPlanks", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(BiomesOPlenty.ID, "logs4", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
@@ -1143,12 +1101,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(ExtraTrees.ID, "log", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         getModItem(Forestry.ID, "logs", 2, wildcard, missing),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -1205,12 +1157,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .itemInputs(
                         getModItem(Forestry.ID, "logs", 2, wildcard, missing),
                         getModItem(PamsHarvestTheNether.ID, "netherPlanks", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(Forestry.ID, "logs", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
@@ -1275,12 +1221,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        getModItem(Forestry.ID, "logsFireproof", 2, wildcard, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         new ItemStack(BOPBlockRegistrator.log_Rainforest, 2, 0),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -1341,12 +1281,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
                 .itemInputs(
-                        new ItemStack(BOPBlockRegistrator.log_Rainforest, 2, 0),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
                         new ItemStack(BOPBlockRegistrator.log_Pine, 2, 0),
                         getModItem(Minecraft.ID, "planks", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
@@ -1403,12 +1337,6 @@ public class ScriptMinecraft implements IScriptLoader {
                 .itemInputs(
                         new ItemStack(BOPBlockRegistrator.log_Pine, 2, 0),
                         getModItem(PamsHarvestTheNether.ID, "netherPlanks", 2, wildcard, missing))
-                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
-                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        new ItemStack(BOPBlockRegistrator.log_Pine, 2, 0),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
                 .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
                 .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
         GTValues.RA.stdBuilder()
@@ -2084,14 +2012,6 @@ public class ScriptMinecraft implements IScriptLoader {
                         getModItem(Minecraft.ID, "carpet", 2, wildcard, missing),
                         getModItem(PamsHarvestCraft.ID, "wovencottonItem", 2, 0, missing),
                         getModItem(ThaumicBases.ID, "enderPlanks", 2, 0, missing),
-                        GTUtility.getIntegratedCircuit(1))
-                .itemOutputs(getModItem(Minecraft.ID, "bed", 1, 0, missing)).duration(5 * SECONDS).eut(24)
-                .addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(Minecraft.ID, "carpet", 2, wildcard, missing),
-                        getModItem(PamsHarvestCraft.ID, "wovencottonItem", 2, 0, missing),
-                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing),
                         GTUtility.getIntegratedCircuit(1))
                 .itemOutputs(getModItem(Minecraft.ID, "bed", 1, 0, missing)).duration(5 * SECONDS).eut(24)
                 .addTo(assemblerRecipes);
@@ -4987,5 +4907,88 @@ public class ScriptMinecraft implements IScriptLoader {
                 null,
                 null,
                 null);
+    }
+
+    private void witcheryRecipes(){
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Witchery.ID, "witchlog", 1, wildcard, missing),
+                        getModItem(Minecraft.ID, "flint", 2, 0, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "crafting_table", 1, 0, missing)).duration(10 * SECONDS).eut(4)
+                .addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Minecraft.ID, "log", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Minecraft.ID, "log2", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(BiomesOPlenty.ID, "logs1", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(BiomesOPlenty.ID, "logs2", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(BiomesOPlenty.ID, "logs3", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(BiomesOPlenty.ID, "logs4", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(ExtraTrees.ID, "log", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Forestry.ID, "logsFireproof", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Forestry.ID, "logs", 2, wildcard, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        new ItemStack(BOPBlockRegistrator.log_Rainforest, 2, 0),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        new ItemStack(BOPBlockRegistrator.log_Pine, 2, 0),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing))
+                .itemOutputs(getModItem(Minecraft.ID, "chest", 1, 0, missing)).duration(5 * SECONDS)
+                .eut(TierEU.RECIPE_LV).addTo(assemblerRecipes);
+        GTValues.RA.stdBuilder()
+                .itemInputs(
+                        getModItem(Minecraft.ID, "carpet", 2, wildcard, missing),
+                        getModItem(PamsHarvestCraft.ID, "wovencottonItem", 2, 0, missing),
+                        getModItem(Witchery.ID, "witchwood", 2, wildcard, missing),
+                        GTUtility.getIntegratedCircuit(1))
+                .itemOutputs(getModItem(Minecraft.ID, "bed", 1, 0, missing)).duration(5 * SECONDS).eut(24)
+                .addTo(assemblerRecipes);
     }
 }

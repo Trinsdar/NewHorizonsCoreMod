@@ -57,8 +57,7 @@ public class ScriptIronChests implements IScriptLoader {
                 TaintedMagic.ID,
                 Thaumcraft.ID,
                 ThaumicBases.ID,
-                TwilightForest.ID,
-                Witchery.ID);
+                TwilightForest.ID);
     }
 
     @Override
@@ -785,13 +784,15 @@ public class ScriptIronChests implements IScriptLoader {
                         GTUtility.getIntegratedCircuit(2))
                 .itemOutputs(getModItem(IronChests.ID, "woodCopperUpgrade", 1, 0, missing)).duration(10 * SECONDS)
                 .eut(16).addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(Witchery.ID, "witchwood", 1, wildcard, missing),
-                        GTOreDictUnificator.get(OrePrefixes.plateDouble, Materials.Copper, 3L),
-                        GTUtility.getIntegratedCircuit(2))
-                .itemOutputs(getModItem(IronChests.ID, "woodCopperUpgrade", 1, 0, missing)).duration(10 * SECONDS)
-                .eut(16).addTo(assemblerRecipes);
+        if (Witchery.isModLoaded()) {
+            GTValues.RA.stdBuilder()
+                    .itemInputs(
+                            getModItem(Witchery.ID, "witchwood", 1, wildcard, missing),
+                            GTOreDictUnificator.get(OrePrefixes.plateDouble, Materials.Copper, 3L),
+                            GTUtility.getIntegratedCircuit(2))
+                    .itemOutputs(getModItem(IronChests.ID, "woodCopperUpgrade", 1, 0, missing)).duration(10 * SECONDS)
+                    .eut(16).addTo(assemblerRecipes);
+        }
         GTValues.RA.stdBuilder()
                 .itemInputs(
                         getModItem(GalaxySpace.ID, "barnardaCplanks", 1, 0, missing),
@@ -1274,13 +1275,15 @@ public class ScriptIronChests implements IScriptLoader {
                         GTUtility.getIntegratedCircuit(2))
                 .itemOutputs(getModItem(IronChests.ID, "woodIronUpgrade", 1, 0, missing)).duration(15 * SECONDS).eut(30)
                 .addTo(assemblerRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(Witchery.ID, "witchwood", 1, wildcard, missing),
-                        GTOreDictUnificator.get(OrePrefixes.plateDouble, Materials.Iron, 3L),
-                        GTUtility.getIntegratedCircuit(2))
-                .itemOutputs(getModItem(IronChests.ID, "woodIronUpgrade", 1, 0, missing)).duration(15 * SECONDS).eut(30)
-                .addTo(assemblerRecipes);
+        if (Witchery.isModLoaded()) {
+            GTValues.RA.stdBuilder()
+                    .itemInputs(
+                            getModItem(Witchery.ID, "witchwood", 1, wildcard, missing),
+                            GTOreDictUnificator.get(OrePrefixes.plateDouble, Materials.Iron, 3L),
+                            GTUtility.getIntegratedCircuit(2))
+                    .itemOutputs(getModItem(IronChests.ID, "woodIronUpgrade", 1, 0, missing)).duration(15 * SECONDS).eut(30)
+                    .addTo(assemblerRecipes);
+        }
         GTValues.RA.stdBuilder()
                 .itemInputs(
                         getModItem(GalaxySpace.ID, "barnardaCplanks", 1, 0, missing),
