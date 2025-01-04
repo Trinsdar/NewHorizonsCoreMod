@@ -477,7 +477,7 @@ public class RecipeRemover {
         removeRecipeByOutputDelayed(getModItem(BiomesOPlenty.ID, "gemOre", 1, 3, missing));
         removeRecipeByOutputDelayed(getModItem(BiomesOPlenty.ID, "gemOre", 1, 13, missing));
         removeRecipeByOutputDelayed(getModItem(BiomesOPlenty.ID, "gemOre", 1, 5, missing));
-        if (BloodMagic.isModLoaded()){
+        if (BloodMagic.isModLoaded()) {
             removeRecipeByOutputDelayed(getModItem(BloodArsenal.ID, "blood_infused_iron_block", 1, 0, missing));
             removeRecipeByOutputDelayed(getModItem(BloodArsenal.ID, "blood_infused_iron", 1, 0, missing));
             removeRecipeByOutputDelayed(getModItem(BloodArsenal.ID, "blood_infused_planks", 1, 0, missing));
@@ -2873,7 +2873,6 @@ public class RecipeRemover {
             removeRecipeByOutputDelayed(getModItem(Witchery.ID, "rubyslippers", 1, 0, missing));
             removeRecipeByOutputDelayed(getModItem(Witchery.ID, "snowpressureplate", 1, 0, missing));
         }
-
 
         removeRecipeByOutputDelayed("nuggetLead");
         removeRecipeByOutputDelayed("nuggetSilver");

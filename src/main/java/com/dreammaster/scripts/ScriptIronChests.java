@@ -1281,8 +1281,8 @@ public class ScriptIronChests implements IScriptLoader {
                             getModItem(Witchery.ID, "witchwood", 1, wildcard, missing),
                             GTOreDictUnificator.get(OrePrefixes.plateDouble, Materials.Iron, 3L),
                             GTUtility.getIntegratedCircuit(2))
-                    .itemOutputs(getModItem(IronChests.ID, "woodIronUpgrade", 1, 0, missing)).duration(15 * SECONDS).eut(30)
-                    .addTo(assemblerRecipes);
+                    .itemOutputs(getModItem(IronChests.ID, "woodIronUpgrade", 1, 0, missing)).duration(15 * SECONDS)
+                    .eut(30).addTo(assemblerRecipes);
         }
         GTValues.RA.stdBuilder()
                 .itemInputs(

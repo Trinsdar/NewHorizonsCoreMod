@@ -94,7 +94,7 @@ public class ScriptMinecraft implements IScriptLoader {
     @Override
     public void loadRecipes() {
         craftingRecipes();
-        if (Witchery.isModLoaded()){
+        if (Witchery.isModLoaded()) {
             witcheryRecipes();
         }
 
@@ -4911,7 +4911,7 @@ public class ScriptMinecraft implements IScriptLoader {
                 null);
     }
 
-    private void witcheryRecipes(){
+    private void witcheryRecipes() {
         GTValues.RA.stdBuilder()
                 .itemInputs(
                         getModItem(Witchery.ID, "witchlog", 1, wildcard, missing),
