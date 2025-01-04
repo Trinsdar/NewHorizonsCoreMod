@@ -72,7 +72,6 @@ public class ScriptGregtech implements IScriptLoader {
                 StructureLib.ID,
                 AdvancedSolarPanel.ID,
                 BiomesOPlenty.ID,
-                BloodArsenal.ID,
                 CropsPlusPlus.ID,
                 IndustrialCraft2.ID,
                 Natura.ID,
@@ -400,10 +399,12 @@ public class ScriptGregtech implements IScriptLoader {
         addShapelessRecipe(
                 GTOreDictUnificator.get(OrePrefixes.frameGt, Materials.Wood, 1L),
                 getModItem(OpenBlocks.ID, "scaffolding", 1, 0, missing));
-        addShapelessRecipe(
-                GTOreDictUnificator.get(OrePrefixes.dustSmall, Materials.Glass, 1L),
-                "craftingToolMortar",
-                getModItem(BloodArsenal.ID, "glass_shard", 1, 0, missing));
+        if (BloodArsenal.isModLoaded()) {
+            addShapelessRecipe(
+                    GTOreDictUnificator.get(OrePrefixes.dustSmall, Materials.Glass, 1L),
+                    "craftingToolMortar",
+                    getModItem(BloodArsenal.ID, "glass_shard", 1, 0, missing));
+        }
         addShapedRecipe(
                 ItemList.Casing_Pump.get(1L),
                 "itemCasingStainlessSteel",
@@ -1727,9 +1728,11 @@ public class ScriptGregtech implements IScriptLoader {
         GTValues.RA.stdBuilder().itemInputs(getModItem(TinkerConstruct.ID, "GlassPane", 1, 0, missing))
                 .itemOutputs(GTOreDictUnificator.get(OrePrefixes.dustSmall, Materials.Glass, 1L)).outputChances(10000)
                 .duration(15 * SECONDS).eut(2).addTo(maceratorRecipes);
-        GTValues.RA.stdBuilder().itemInputs(getModItem(BloodArsenal.ID, "glass_shard", 2, 0, missing))
-                .itemOutputs(GTOreDictUnificator.get(OrePrefixes.dust, Materials.Glass, 1L)).outputChances(10000)
-                .duration(15 * SECONDS).eut(2).addTo(maceratorRecipes);
+        if (BloodArsenal.isModLoaded()) {
+            GTValues.RA.stdBuilder().itemInputs(getModItem(BloodArsenal.ID, "glass_shard", 2, 0, missing))
+                    .itemOutputs(GTOreDictUnificator.get(OrePrefixes.dust, Materials.Glass, 1L)).outputChances(10000)
+                    .duration(15 * SECONDS).eut(2).addTo(maceratorRecipes);
+        }
         GTModHandler.addSmeltingRecipe(
                 GTOreDictUnificator.get(OrePrefixes.ore, Materials.Magnetite, 1L),
                 getModItem(Minecraft.ID, "iron_ingot", 1, 0, missing));

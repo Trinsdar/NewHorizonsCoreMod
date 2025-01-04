@@ -68,7 +68,6 @@ public class ScriptMinecraft implements IScriptLoader {
         return Arrays.asList(
                 GalacticraftAmunRa.ID,
                 TinkerConstruct.ID,
-                BloodArsenal.ID,
                 Natura.ID,
                 MagicBees.ID,
                 Backpack.ID,
@@ -124,12 +123,14 @@ public class ScriptMinecraft implements IScriptLoader {
                         ItemList.Shape_Mold_Ingot.get(0L))
                 .itemOutputs(getModItem(Minecraft.ID, "netherbrick", 1, 0, missing)).duration(10 * SECONDS).eut(2)
                 .addTo(alloySmelterRecipes);
-        GTValues.RA.stdBuilder()
-                .itemInputs(
-                        getModItem(BloodArsenal.ID, "glass_shard", 2, 0, missing),
-                        ItemList.Shape_Mold_Block.get(0L))
-                .itemOutputs(getModItem(Minecraft.ID, "glass", 1, 0, missing)).duration(5).eut(64)
-                .addTo(alloySmelterRecipes);
+        if (BloodArsenal.isModLoaded()) {
+            GTValues.RA.stdBuilder()
+                    .itemInputs(
+                            getModItem(BloodArsenal.ID, "glass_shard", 2, 0, missing),
+                            ItemList.Shape_Mold_Block.get(0L))
+                    .itemOutputs(getModItem(Minecraft.ID, "glass", 1, 0, missing)).duration(5).eut(64)
+                    .addTo(alloySmelterRecipes);
+        }
         GTValues.RA.stdBuilder()
                 .itemInputs(
                         GTOreDictUnificator.get(OrePrefixes.ingot, Materials.Iron, 5L),

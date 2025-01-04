@@ -72,7 +72,6 @@ public class ScriptTinkersConstruct implements IScriptLoader {
                 Mantle.ID,
                 RandomThings.ID,
                 TinkersMechworks.ID,
-                BloodArsenal.ID,
                 BuildCraftCore.ID,
                 ElectroMagicTools.ID,
                 ExtraTrees.ID,
@@ -1938,7 +1937,9 @@ public class ScriptTinkersConstruct implements IScriptLoader {
         TConstructHelper.removeMeltingRecipe(getModItem(GalaxySpace.ID, "item.Ingots", 1, 1, missing));
         TConstructHelper.removeMeltingRecipe(new ItemStack(GregTechAPI.sBlockMetal2, 1, 5));
         TConstructHelper.removeBasinRecipe(getModItem(TinkerConstruct.ID, "MetalBlock", 1, 0, missing));
-        TConstructHelper.removeBasinRecipe(getModItem(BloodArsenal.ID, "blood_infused_iron_block", 1, 0, missing));
+        if (BloodArsenal.isModLoaded()) {
+            TConstructHelper.removeBasinRecipe(getModItem(BloodArsenal.ID, "blood_infused_iron_block", 1, 0, missing));
+        }
         TConstructHelper.removeMeltingRecipe(getModItem(Minecraft.ID, "sand", 1, 0, missing));
         TConstructHelper.removeSmelterAlloyMix(FluidRegistry.getFluidStack("alumite.molten", 32));
         TConstructHelper.removeMeltingRecipe(getModItem(TinkerConstruct.ID, "CraftedSoil", 1, 1, missing));
